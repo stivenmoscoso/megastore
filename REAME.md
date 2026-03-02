@@ -21,10 +21,10 @@ Used for the **Audit Log** system to track deleted products.
 ## 3. Installation & Setup
 
 1. **Clone the repository:**
-```bash
-git clone <your-repo-url>
+bash
+git clone https://github.com/stivenmoscoso/megastore.git
 cd MegaStore
-```
+
 
 2. **Install dependencies:**
 ```bash
