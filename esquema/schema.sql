@@ -1,0 +1,73 @@
+CREATE TABLE customers (
+id SERIAL PRIMARY KEY,
+customer_name VARCHAR(150) NOT NULL,
+customer_email VARCHAR(150) NOT NULL UNIQUE,
+customer_address TEXT NOT NULL,
+customer_phone VARCHAR(20) NOT NULL,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE suppliers (
+id SERIAL PRIMARY KEY,
+supplier_name VARCHAR(150) NOT NULL UNIQUE,
+supplier_email VARCHAR(150) NOT NULL,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE categories (
+id SERIAL PRIMARY KEY,
+name VARCHAR(100) NOT NULL UNIQUE,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE products (
+id SERIAL PRIMARY KEY,
+sku VARCHAR(100) NOT NULL UNIQUE,
+name VARCHAR(200) NOT NULL,
+unit_price NUMERIC(10,2) NOT NULL CHECK (unit_price >= 0),
+category_id INTEGER NOT NULL,
+supplier_id INTEGER NOT NULL,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+CONSTRAINT fk_category
+FOREIGN KEY (category_id)
+REFERENCES categories(id)
+ON DELETE RESTRICT,
+
+CONSTRAINT fk_supplier
+FOREIGN KEY (supplier_id)
+REFERENCES suppliers(id)
+ON DELETE RESTRICT
+);
+
+CREATE TABLE orders (
+id SERIAL PRIMARY KEY,
+transaction_id VARCHAR(100) NOT NULL UNIQUE,
+
+id_customer INTEGER NOT NULL,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+CONSTRAINT fk_customer
+FOREIGN KEY (id_customer)
+REFERENCES customers(id)
+ON DELETE CASCADE
+);
+
+CREATE TABLE order_details (
+id SERIAL PRIMARY KEY,
+id_order INTEGER NOT NULL,
+id_product INTEGER NOT NULL,
+quantity INTEGER NOT NULL CHECK (quantity > 0),
+subtotal NUMERIC(10,2) NOT NULL,
+
+CONSTRAINT fk_order
+FOREIGN KEY (id_order)
+REFERENCES orders(id)
+ON DELETE CASCADE,
+
+CONSTRAINT fk_product
+FOREIGN KEY (id_product)
+REFERENCES products(id)
+ON DELETE RESTRICT
+);
